@@ -1,0 +1,128 @@
+body {
+    font-family: "Calibri";
+    color: #212529;
+
+    min-height: 100vh;
+
+    display: grid;
+    grid-template-rows: max-content auto max-content;
+}
+
+nav {
+    grid-row: 1;
+    font-family: "Consolas" ;
+}
+
+.nav-menu-item {
+    background-color: #0E8EA8;
+    margin: 0 1px;
+}
+.nav-menu-item a {
+    color: #fff;
+}
+
+.dropdown-menu {
+    background: #83D1E1;
+    border: none;
+}
+.dropdown-menu a{
+   color: #212529;
+   transition: 0.2s;
+}
+
+main {
+    grid-row: 2;
+}
+
+#dashboard-header-text-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.section-header-container {
+    display: flex;
+    justify-content: center;
+}
+
+.table-container {
+    border-color: black;
+}
+
+.table {
+    border: 1px solid #212529;
+    text-align: center;
+}
+
+.table thead {
+    background-color: #0E8EA8;
+    color: #fff;
+    font-family: "Consolas";
+}
+
+.table tbody {
+    font-family: "Calibri";
+    background-color: #83D1E1;
+    columns: #212559;
+}
+
+.section-button-container.one-button {
+    display: flex;
+    justify-content: right;
+}
+
+.section-button-container.two-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-custom {
+    font-family: "Consolas";
+    color: #fff;
+    width: 100px;
+    border-width: 3px;
+    border-style: solid;
+}
+
+.btn-custom:hover {
+    font-weight: 600;
+}
+
+.btn-custom:active {
+    color: #212559;
+    border-color: #212559;
+    opacity: 0.8;
+}
+
+.btn-positive {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.btn-positive:hover {
+    border-color: #198754;
+    color: #198754;
+}
+
+.btn-negative {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-negative:hover {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+footer {
+    grid-row: 3;
+}
+
+#clock-container {
+    text-align: right;
+    padding: 1rem;
+    font-family:  "Consolas";
+    font-size: "1em";
+    font-weight: 600;
+}
+

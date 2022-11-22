@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeDeliverTECK&#8482</title>
+
+    <!-- importing libraries -->
+    <script src="./scripts/lib/jquery-3.6.1.min.js" defer></script>
+    <script src="./scripts/lib/bootstrap.bundle.min.js" defer></script>
+    <link rel="stylesheet" href="./styles/lib/bootstrap.min.css">
+
+    <!-- importing local files -->
+    <script src="./scripts/wdt_app.js" defer></script>
+    <script src="./scripts/development.js" defer></script>
+    <link rel="stylesheet" href="./styles/main.css">
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-sm">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+              <ul class="navbar-nav">
+                <li class="nav-item nav-menu-item" >
+                  <a class="nav-link" aria-current="page" href="../Web%20Application/index.html">Dashboard</a>
+                </li>
+
+                <li class="nav-item nav-menu-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Inventory
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Search</a></li>
+                      <li><a class="dropdown-item" href="#">Add</a></li>
+                      <li><a class="dropdown-item" href="#">Remove</a></li>
+                    </ul>
+                  </li>
+
+                  <li class="nav-item nav-menu-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Orders
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Search</a></li>
+                      <li><a class="dropdown-item" href="#">Add</a></li>
+                      <li><a class="dropdown-item" href="#">Remove</a></li>
+                    </ul>
+                  </li>
+              </ul>
+
+            </div>
+          </div>
+    </nav>
+
+    <main>
+
+        <div class="container-lg text-center" id="dashboard-header">
+            <div class="row">
+                <div class="col-auto">
+                    <img src="./resources/logo.png" height="100">
+                </div>
+                <div class="col" id="dashboard-header-text-container">
+                    <div class="h2""">Reception Management Dashboard</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-lg">
+            <div class="section-header-container">
+                <div class="h4">Staff</div>
+            </div>
+            <table class="table table-bordered rounded rounded-3 overflow-hidden align-middle" id="dashboard-staff-table">
+                <thead>
+                    <tr>
+                        <th>Picture</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email address</th>
+                        <th>Status</th>
+                        <th>Out time</th>
+                        <th>Duration</th>
+                        <th>Expected Return Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="" alt="thumbnail">
+                        </td>
+                        <td>John</td>
+                        <td>Smith</td>
+                        <td>john@test.com</td>
+                        <td>Out</td>
+                        <td>12:00</td>
+                        <td>1hr 20m 3s</td>
+                        <td>13.30</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        <div class="section-button-container two-buttons">
+            <button class="btn btn-custom btn-negative" id="staff-out-button">Out</button>
+            <button class="btn btn-custom btn-positive" id="staff-in-button">In</button>
+            </div>
+        </div>
+
+
+
+        <div class="container-lg">
+            <div class="section-header-container">
+                <div class="h4">Schedule Delivery</div>
+            </div>
+
+            <table class="table table-bordered rounded rounded-3 overflow-hidden align-middle" id="dashboard-delivery-form">
+                <thead>
+                    <tr>
+                        <th>Vehicle:</th>
+                        <th>Name:</th>
+                        <th>Surname:</th>
+                        <th>Telephone:</th>
+                        <th>Address:</th>
+                        <th>Return time:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <select class="form-select" id="delivery-input-vehicle">
+                                <option value="car">Car</option>
+                                <option value="bike">Bike</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="delivery-input-name" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="delivery-input-surname" />
+                        </td>
+                        <td>
+                            <input type="tel" class="form-control" id="delivery-input-telephone" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="delivery-input-address" />
+                        </td>
+                        <td>
+                            <input type="time" class="form-control" id="delivery-input-return-time" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="section-button-container one-button">
+                <button class="btn btn-custom btn-positive" id="delivery-add">Add</button>
+            </div>
+
+            <div class="section-header-container">
+                <div class="h4">Delivery Board</div>
+            </div>
+
+            <table class="table table-bordered rounded rounded-3 overflow-hidden align-middle" id="dashboard-delivery-board">
+                <thead>
+                    <tr>
+                        <th>Vehicle</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Telephone</th>
+                        <th>Delivery Address</th>
+                        <th>Return Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="./resources/bicycle.svg" height="25">
+                        </td>
+                        <td>John</td>
+                        <td>Smith</td>
+                        <td>411 55 666</td>
+                        <td>Downtownstreet 66</td>
+                        <td>16:30</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="section-button-container one-button">
+                <button class="btn btn-custom btn-negative" id="delivery-clear">Clear</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div id="clock-container">Clock container</div>
+    </footer>
+
+</body>
+</html>
