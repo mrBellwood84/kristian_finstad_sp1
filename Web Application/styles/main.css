@@ -64,6 +64,25 @@ main {
     font-family: "Calibri";
     background-color: #83D1E1;
     columns: #212559;
+    cursor: pointer;
+}
+
+.table tbody tr {
+    transition: 0.1s;
+}
+
+
+.table tbody tr:hover {
+    background-color: #fff;
+}
+
+.table tbody tr.row-selected {
+    background-color: #fff;
+    font-weight: 600;
+}
+
+.table tbody tr:active {
+    font-weight: 600;
 }
 
 .section-button-container.one-button {
