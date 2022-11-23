@@ -145,3 +145,12 @@ footer {
     font-weight: 600;
 }
 
+#toast-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: max-content;
+    width: max-content;
+    z-index: 9;
+}
+

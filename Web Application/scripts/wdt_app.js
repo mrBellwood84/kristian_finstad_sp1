@@ -1,7 +1,7 @@
 
 /** container for app configurations */
 const config = {
-    API_URL: "https://randomuser.me/api/?results=5",
+    API_URL: "https://randomuser.me/api/?results=5&nat=gb,us,no&inc=name,email,picture",
 }
 
 /** container for jQuery selector strings */
@@ -9,19 +9,10 @@ const jqSelectors = {
     CLOCK_ELEM: "#clock-container",
     STAFF_TABLE: "#dashboard-staff-table tbody",
     STAFF_IN_BTN: "#staff-in-button",   
-    STAFF_OUT_BT: "#staff-out-button",
+    STAFF_OUT_BTN: "#staff-out-button",
     STAFF_ROW: ".dashboard-staff-table-row",
-}
-
-/** container for application data */
-class AppData {
-    constructor () {
-        this.staff = []
-        this.selectedStaff = undefined
-    }
-
-
-    setStaffMembers(array) { this.staff = array} 
+    TOAST_CONTAINER: "#toast-container",
+    DELIVERY_ADD: "#delivery-add",
 }
 
 /** base class for employee */
@@ -48,9 +39,13 @@ class StaffMember extends Employee {
         this.picture    = picture;
         this.status     = "In";
     }
+
+    staffMemberIsLate() {
+        staffMemberIsLate(this)
+    }
 }
 
-class DeliveryDriver {
+class DeliveryDriver extends Employee {
     
 }
 
@@ -69,24 +64,27 @@ function createAppDataContainer() {
     }
 }
 
-
-function createStaffTableRow(staffMember, id) {
-    const elem = `<tr class="dashboard-staff-table-row" id="staffmember-${id}">`+
-    `<td><img src=${staffMember.picture} alt="thumbnail"></td>`+
-    `<td> ${staffMember.name} </td>` +
-    `<td> ${staffMember.surname} </td>` +
-    `<td> ${staffMember.email} </td>` +
-    `<td> ${staffMember.status} </td>` +
-    `<td> ${staffMember.outTime ? staffMember.outTime : "" }</td>` +
-    `<td> ${staffMember.duration ? staffMember.duration : ""} </td>` +
-    `<td> ${staffMember.expectedReturnTime ? staffMember.expectedReturnTime : ""} </td>` +
-    "</tr>"
-    return elem;
+function createStaffTableRow(staffMemberList) {
+    let id = 1
+    const result = staffMemberList.map(s => {    
+        const elem = `<tr class="dashboard-staff-table-row" id="staffmember-${id++}">`+
+            `<td><img src=${s.picture} alt="thumbnail"></td>`+
+            `<td> ${s.name} </td>` +
+            `<td> ${s.surname} </td>` +
+            `<td> ${s.email} </td>` +
+            `<td> ${s.status} </td>` +
+            `<td> ${s.outTime ? s.outTime.toLocaleTimeString("default", { hour: "2-digit", minute: "2-digit"}) : "" }</td>` +
+            `<td> ${s.duration ? s.duration : ""} </td>` +
+            `<td> ${s.expectedReturnTime ? s.expectedReturnTime.toLocaleTimeString("default", { hour: "2-digit", minute: "2-digit"}) : ""} </td>` +
+            "</tr>";
+        return elem;
+    })
+    return result
 }
-
 
 function populateStaffTable(rows, setSelectedStaffMember) {
     const table = $(jqSelectors.STAFF_TABLE)
+    table.empty()
     rows.map(x => {
         table.append(x)
     })
@@ -120,12 +118,8 @@ function populateStaffTable(rows, setSelectedStaffMember) {
                 elem.addClass("row-selected")
                 setSelectedStaffMember(obj)
             }
-
-
         })
     })
-
-
 }
 
 /**
@@ -144,6 +138,7 @@ function staffUserGet(setStaffData, setSelectedStaffMember) {
         const json = JSON.parse(response);
         // extract users from response
         const usersRaw = json.results;
+
         // create users
         const staffMembers = usersRaw.map(x => {
             return new StaffMember(
@@ -157,8 +152,7 @@ function staffUserGet(setStaffData, setSelectedStaffMember) {
         setStaffData(staffMembers)
 
         // create table rows for each staff member
-        let idCounter = 0;
-        const rows = staffMembers.map(x => createStaffTableRow(x, idCounter++));
+        const rows = createStaffTableRow(staffMembers);
 
         // insert data to table
         populateStaffTable(rows, setSelectedStaffMember)
@@ -170,15 +164,96 @@ function staffUserGet(setStaffData, setSelectedStaffMember) {
     request.send();
 }
 
-
 function staffOut() {
-    const staffSelected = appData.getSelectedStaffMember();
-    console.log(staffSelected)
+    const selected = appData.getSelectedStaffMember();
+    const allStaff = appData.getStaffMembers();
+    if (!selected) return;
+    if (selected.status === "Out") return
+
+    let time = undefined;
+    while (true) {
+        let userInput = prompt("Set staff out time in minutes");
+        if (userInput === null) break;
+        time = parseInt(userInput);
+        if (!isNaN(time)) break;
+    }
+
+    if (time <= 0 || isNaN(time) || !time) return;
+
+    const now = new Date();
+    const back = new Date();
+    back.setMinutes(now.getMinutes() + time);
+
+    const hours = Math.floor(time / 60);
+    const minutes = time - (hours * 60);
+
+    const hourString = hours > 0 ? `${hours} hour, ` : "";
+
+    const duration = `${hourString}${minutes} minutes`;
+
+    selected.status = "Out";
+    selected.outTime = now;
+    selected.expectedReturnTime = back;
+    selected.duration = duration;
+    
+    selected.staffMemberIsLate()
+
+    const staffElements = createStaffTableRow(allStaff);
+    populateStaffTable(staffElements, appData.setSelectedStaffMember);
+    appData.setSelectedStaffMember(undefined);
 }
 
-function staffMemberIsLate(){
+function staffIn() {
+    const selected = appData.getSelectedStaffMember();
+    const allStaff = appData.getStaffMembers();
 
+    if (!selected) return;
+    if (selected.status === "In") return;
+
+    selected.status = "In";
+    selected.outTime = undefined;
+    selected.duration = undefined;
+    selected.expectedReturnTime = undefined;
+
+    const staffElements = createStaffTableRow(allStaff);
+    populateStaffTable(staffElements, appData.setSelectedStaffMember);
+    appData.setSelectedStaffMember(undefined)
 }
+
+/** 
+ * Standalone function contain functionality for toast alert to end user.
+ * Similar named method in class run timeout loop and decide if toast is to be printed to page.
+ * 
+ * @remarks Creating this as a standalone function was after consulting a teacher asking if 
+ * all required functions in the grading criteria was supposed to be standalone functions of included
+ * in classes as methods.
+ * */
+function staffMemberIsLate(obj){
+
+    const toastContainer = $(jqSelectors.TOAST_CONTAINER);
+    const toastId = `toast-${obj.email}-${Date.now()}`
+
+    const toast = 
+        `<div class='toast show' id="${toastId}">` +
+        "<div class='toast-header'>" +
+        "<strong class='me-auto'>Staff Member late</strong>" +
+        "<button type='button' class='btn-close' data-bs-dismiss='toast'></button>" +
+        "</div>" +
+        "<div class='toast-body'>" +
+        `<p> ${obj.name} ${obj.surname} seems to be running late</p>` +
+        "</div>" +
+        "</div>";
+
+    const sleep = obj.expectedReturnTime.getTime() - obj.outTime.getTime();
+
+    setTimeout(() => {
+        if (obj.status === "In") return
+        toastContainer.append(toast)
+        
+    }, sleep)
+}
+
+
 
 function addDelivery() {
 
@@ -218,12 +293,22 @@ function digitalClock() {
 }
 
 
+
+/*  --application starts here -- */
+
+/** create storage for app data */
 const appData = createAppDataContainer();
 
+// download user data and populate table
 staffUserGet(appData.setStaffMembers, appData.setSelectedStaffMember)
 
 
 digitalClock()
 
 
-$(jqSelectors.STAFF_IN_BTN).click(staffOut)
+$(jqSelectors.STAFF_OUT_BTN).click(staffOut)
+$(jqSelectors.STAFF_IN_BTN).click(staffIn)
+
+$(jqSelectors.DELIVERY_ADD).click(() => {
+    staffMemberIsLate("Kristian", "Hansen")
+})
