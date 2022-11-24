@@ -17,6 +17,7 @@ const jqSelectors = {
     DELIVERY_FORM: "#delivery-form",
     DELIVERY_ADD: "#delivery-add",
     DELIVERY_BOARD: "#dashboard-delivery-board tbody",
+    DELIVERY_CLEAR_BUTTON: "#delivery-clear-btn",
 
     INPUT_VEHICLE: "#delivery-input-vehicle",
     INPUT_NAME: "#delivery-input-name",
@@ -63,6 +64,12 @@ class DeliveryDriver extends Employee {
         this.telephone = telephone;
         this.address = address;
         this.returnTime = return_time;
+        
+        this.deliveryIsLate()
+    }
+
+    deliveryIsLate() {
+        deliveryIsLate(this)
     }
 }
 
@@ -116,7 +123,7 @@ function createAppDataContainer() {
         getDeliveries() { return deliveries },
         addDelivery(item) { deliveries.push(item) },
         removeDelivery(item) {
-            deliveries = [...deliveries].filter(x => x === item);
+            deliveries = [...deliveries].filter(x => x !== item);
         },
 
         getSelectedDelivery() { return selectedDelivery },
@@ -224,7 +231,6 @@ function staffUserGet(setStaffData, setSelectedStaffMember) {
     request.send();
 }
 
-
 function staffOut() {
     const selected = appData.getSelectedStaffMember();
     const allStaff = appData.getStaffMembers();
@@ -292,12 +298,12 @@ function staffIn() {
 function staffMemberIsLate(obj){
 
     const toastContainer = $(jqSelectors.TOAST_CONTAINER);
-    const toastId = `toast-${obj.email}-${Date.now()}`
+    const toastId = `toast-${obj.name}-${Date.now()}`
 
     const toast = 
         `<div class='toast show' id="${toastId}">` +
         "<div class='toast-header'>" +
-        "<strong class='me-auto'>Staff Member late</strong>" +
+        "<strong class='me-auto'>Staff Member Late</strong>" +
         "<button type='button' class='btn-close' data-bs-dismiss='toast'></button>" +
         "</div>" +
         "<div class='toast-body'>" +
@@ -378,8 +384,6 @@ function addDelivery(appData) {
         return_time: new InputField(jqSelectors.INPUT_RETURN_TIME),
     }  
 
-    console.log(fields.vehichle)
-
     Object.keys(fields).map(x => {
         fields[x].removeError()
     })
@@ -439,7 +443,46 @@ function validateDelivery(fields) {
 
 }
 
-function deliveryIsLate() {
+function deliveryIsLate(obj) {
+    const toastContainer = $(jqSelectors.TOAST_CONTAINER);
+    const toastId = `toast-${obj.name}-${Date.now()}`
+
+    const toast = 
+        `<div class='toast show' id="${toastId}">` +
+            "<div class='toast-header'>" +
+                "<strong class='me-auto'>Delivery Driver Late</strong>" +
+                "<button type='button' class='btn-close' data-bs-dismiss='toast'></button>" +
+            "</div>" +
+            "<div class='toast-body'>" +
+                `<p> ${obj.name} ${obj.surname} seems to be running late</p>` +
+            "</div>" +
+        "</div>";
+
+        const now = Date.now()
+        const later = new Date()
+        later.setHours(parseInt(obj.returnTime.split(":")[0]))
+        later.setMinutes(parseInt(obj.returnTime.split(":")[1]))
+
+        const sleep = later.getTime() - now;
+
+        setTimeout(() => {
+            const shouldRun = appData.getDeliveries().find(x => x.telephone === obj.telephone)
+            if (!shouldRun) return;
+            toastContainer.append(toast)
+            
+        }, sleep)
+}
+
+function clearDelivery() {
+    const selected = appData.getSelectedDelivery();
+    if (!selected) return
+    
+    const shouldRemove = confirm("Do you want to remove this delivery?");
+    if (!shouldRemove) return;
+
+    appData.removeDelivery(selected);
+    const elems = createDeliveryDriverTableRow(appData.getDeliveries());
+    populateDeliveryDriverBoard(elems, appData.setSelectedDelivery)
 
 }
 
@@ -469,7 +512,6 @@ function digitalClock() {
 }
 
 
-
 /*  --application starts here -- */
 
 /** create storage for app data */
@@ -485,19 +527,4 @@ $(jqSelectors.STAFF_IN_BTN).click(staffIn)
 
 $(jqSelectors.DELIVERY_FORM).submit(() => addDelivery(appData))
 
-
-// testing data
-const testDeliveryData = [
-    new DeliveryDriver("Frodo", "Baggins", "bike", "55 44 33 22", "Mount Doom", "15:00"),
-    new DeliveryDriver("Bilbo", "Baggins", "car", "44 33 22 11", "Rivedell", "12:00")
-]
-
-testDeliveryData.forEach(x => {
-    appData.addDelivery(x)
-})
-
-console.log(testDeliveryData)
-
-const elems = createDeliveryDriverTableRow(testDeliveryData)
-populateDeliveryDriverBoard(elems, appData.setSelectedDelivery)
-
+$(jqSelectors.DELIVERY_CLEAR_BUTTON).click(clearDelivery)
