@@ -13,6 +13,11 @@ nav {
     font-family: "Consolas" ;
 }
 
+.nav-item a.nav-link.active {
+    font-weight: 600;
+    color: #fff;
+}
+
 .nav-menu-item {
     background-color: #0E8EA8;
     margin: 0 1px;
@@ -72,7 +77,8 @@ main {
 }
 
 
-.table tbody tr:hover {
+.table#dashboard-staff-table tbody tr:hover,
+.table#dashboard-delivery-board tbody tr:hover {
     background-color: #fff;
 }
 
@@ -81,7 +87,8 @@ main {
     font-weight: 600;
 }
 
-.table tbody tr:active {
+.table#dashboard-staff-table tbody tr:active,
+.table#dashboard-delivery-board tbody tr:active {
     font-weight: 600;
 }
 
@@ -152,5 +159,14 @@ footer {
     height: max-content;
     width: max-content;
     z-index: 9;
+}
+
+.form-control.field-error {
+    border: 5px solid #dc3546aa;
+    
+}
+
+.form-control-error {
+    color: #dc3545;
 }
 

@@ -11,8 +11,19 @@ const jqSelectors = {
     STAFF_IN_BTN: "#staff-in-button",   
     STAFF_OUT_BTN: "#staff-out-button",
     STAFF_ROW: ".dashboard-staff-table-row",
+
     TOAST_CONTAINER: "#toast-container",
+
+    DELIVERY_FORM: "#delivery-form",
     DELIVERY_ADD: "#delivery-add",
+    DELIVERY_BOARD: "#dashboard-delivery-board tbody",
+
+    INPUT_VEHICLE: "#delivery-input-vehicle",
+    INPUT_NAME: "#delivery-input-name",
+    INPUT_SURNAME: "#delivery-input-surname",
+    INPUT_TELEPHONE: "#delivery-input-telephone",
+    INPUT_ADDRESS: "#delivery-input-address",
+    INPUT_RETURN_TIME: "#delivery-input-return-time",
 }
 
 /** base class for employee */
@@ -46,13 +57,53 @@ class StaffMember extends Employee {
 }
 
 class DeliveryDriver extends Employee {
-    
+    constructor(name, surname, vehichle, telephone, address, return_time) {
+        super(name, surname);
+        this.vehichle = vehichle;
+        this.telephone = telephone;
+        this.address = address;
+        this.returnTime = return_time;
+    }
 }
 
+class InputField {
+    
+    constructor(jqSelector) {
+        this.field = $(jqSelector);
+        this.errorField = $(`${jqSelector}-error`);
+        this.value = this.field.val();
+    }
+
+    /**
+     * @param {() => string} callback function for validating value, return message string, empty if valid
+     * @returns true if value is valid
+     */
+    validate(callback) {
+        const message = callback(this.value);
+        const isValid = message === "";
+        if (!isValid) this.setError(message)
+        return isValid
+    }
+
+    setError(message) {
+        this.field.addClass("field-error")
+        this.errorField.text(message)
+    }
+    removeError() {
+        this.field.removeClass("field-error")
+        this.errorField.text("")
+    }
+
+    reset() {
+        this.field.val("")
+    }
+}
 
 function createAppDataContainer() {
     let staffMembers = []
     let selectedStaffMember = undefined
+    let deliveries = []
+    let selectedDelivery = undefined;
 
     return {
 
@@ -61,6 +112,15 @@ function createAppDataContainer() {
 
         getSelectedStaffMember() { return selectedStaffMember},
         setSelectedStaffMember(member) { selectedStaffMember = member},
+
+        getDeliveries() { return deliveries },
+        addDelivery(item) { deliveries.push(item) },
+        removeDelivery(item) {
+            deliveries = [...deliveries].filter(x => x === item);
+        },
+
+        getSelectedDelivery() { return selectedDelivery },
+        setSelectedDelivery(delivery) { selectedDelivery = delivery}
     }
 }
 
@@ -73,9 +133,9 @@ function createStaffTableRow(staffMemberList) {
             `<td> ${s.surname} </td>` +
             `<td> ${s.email} </td>` +
             `<td> ${s.status} </td>` +
-            `<td> ${s.outTime ? s.outTime.toLocaleTimeString("default", { hour: "2-digit", minute: "2-digit"}) : "" }</td>` +
+            `<td> ${s.outTime ? s.outTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit"}) : "" }</td>` +
             `<td> ${s.duration ? s.duration : ""} </td>` +
-            `<td> ${s.expectedReturnTime ? s.expectedReturnTime.toLocaleTimeString("default", { hour: "2-digit", minute: "2-digit"}) : ""} </td>` +
+            `<td> ${s.expectedReturnTime ? s.expectedReturnTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit"}) : ""} </td>` +
             "</tr>";
         return elem;
     })
@@ -91,11 +151,11 @@ function populateStaffTable(rows, setSelectedStaffMember) {
 
     const r = table.children();
     r.map(i => {
+
         const selector = r[i].id
-        
         const elem = $(`#${selector}`);
 
-        elem.removeClass().click(() => {
+        elem.removeClass("row-selected").click(() => {
 
             const email = r[i].children[3].innerText
             const obj = appData.getStaffMembers().find(x => x.email === email)
@@ -163,6 +223,7 @@ function staffUserGet(setStaffData, setSelectedStaffMember) {
     request.open("GET", config.API_URL, true);
     request.send();
 }
+
 
 function staffOut() {
     const selected = appData.getSelectedStaffMember();
@@ -253,13 +314,128 @@ function staffMemberIsLate(obj){
     }, sleep)
 }
 
+function createDeliveryDriverTableRow(deliveryDriverList) {
+    let id = 1;
+    const result = deliveryDriverList.map(d => {
+        const svg = d.vehichle === "car" ? "./resources/car-front-fill.svg"  : "./resources/bicycle.svg"
+        const elem = `<tr class="dashboard-delivery-table-row" id="delivery-driver-${id++}">` +
+            `<td><img src="${svg}" height="25"></td>` +
+            `<td>${d.name}</td>` +
+            `<td>${d.surname}</td>` +
+            `<td>${d.telephone}</td>` +
+            `<td>${d.address}</td>` +
+            `<td>${d.returnTime}</td>` +
+            "</tr>"
+        return elem;
+    })
+    return result;
+}
+
+function populateDeliveryDriverBoard(rows, setSelectedDelivery) {
+    const table = $(jqSelectors.DELIVERY_BOARD);
+    table.empty();
+    rows.map(r => table.append(r))
+
+    const r = table.children()
+    r.map(i => {
+
+        const selector = r[i].id;
+        const elem = $(`#${selector}`);
+
+        elem.removeClass("row-selected").click(() => {
+            const phone = r[i].children[3].innerText;
+            const obj = appData.getDeliveries().find(x => x.telephone === phone)
+            const selected = appData.getSelectedDelivery();
 
 
-function addDelivery() {
+            if (selected) {
+                if (selected.telephone === phone) {
+                    setSelectedDelivery(undefined)
+                    elem.removeClass("row-selected")
+                } else {
+                    r.map(x => {
+                        const e = `#${r[x].id}`;
+                        $(e).removeClass("row-selected")
+                    })
+                    elem.addClass("row-selected")
+                    setSelectedDelivery(obj)
+                }
+            } else {
+                elem.addClass("row-selected")
+                setSelectedDelivery(obj)
+            }
+        })
+    })
+}
+
+function addDelivery(appData) {
+    const fields = {
+        vehichle:    new InputField(jqSelectors.INPUT_VEHICLE),
+        name:        new InputField(jqSelectors.INPUT_NAME),
+        surname:     new InputField(jqSelectors.INPUT_SURNAME),
+        telephone:   new InputField(jqSelectors.INPUT_TELEPHONE),
+        address:     new InputField(jqSelectors.INPUT_ADDRESS),
+        return_time: new InputField(jqSelectors.INPUT_RETURN_TIME),
+    }  
+
+    console.log(fields.vehichle)
+
+    Object.keys(fields).map(x => {
+        fields[x].removeError()
+    })
+
+    const formValid = validateDelivery(fields)
+
+    if (!formValid) return false; 
+
+    const delivery = new DeliveryDriver(
+        fields.name.value,
+        fields.surname.value,
+        fields.vehichle.value,
+        fields.telephone.value,
+        fields.address.value,
+        fields.return_time.value
+    )
+
+    appData.addDelivery(delivery)
+    const rows = createDeliveryDriverTableRow(appData.getDeliveries())
+    populateDeliveryDriverBoard(rows, appData.setSelectedDelivery)
+
+    Object.keys(fields).map(key => {
+        fields[key].reset()
+    })
+    
+    return false
 
 }
 
-function validateDelivery() {
+function validateDelivery(fields) {
+    
+    const stringNotEmpty = value => !value ? "Missing value" : "";
+    const isNumber = value => /^(\d+\s)*(\d+)$/.test(value) ? "" : "Not a number";
+    const validTimeFormat = value => /\d\d\:\d\d/.test(value) ? "" : "Not valid time format";
+    const isLater = value => {
+        const now = new Date().toLocaleTimeString("en-GB", {hour: "2-digit", minute: "2-digit"});
+        const validLater = now < value;
+        return validLater ? "" : "Return time to early";
+    }
+    
+        
+    const containError = Object.keys(fields).filter(key => {
+        const res = fields[key].validate(stringNotEmpty);
+        if (!res) return true;
+    })
+
+    let validNumber = false;
+    if (!containError.includes("telephone")) validNumber = fields.telephone.validate(isNumber);
+
+    let validReturn = false;
+    if (!containError.includes("return_time")) {
+        validReturn = fields.return_time.validate(validTimeFormat);
+        if (validReturn) validReturn = fields.return_time.validate(isLater);
+    };
+
+    return containError.length === 0 && validNumber && validReturn;
 
 }
 
@@ -302,13 +478,26 @@ const appData = createAppDataContainer();
 // download user data and populate table
 staffUserGet(appData.setStaffMembers, appData.setSelectedStaffMember)
 
-
 digitalClock()
-
 
 $(jqSelectors.STAFF_OUT_BTN).click(staffOut)
 $(jqSelectors.STAFF_IN_BTN).click(staffIn)
 
-$(jqSelectors.DELIVERY_ADD).click(() => {
-    staffMemberIsLate("Kristian", "Hansen")
+$(jqSelectors.DELIVERY_FORM).submit(() => addDelivery(appData))
+
+
+// testing data
+const testDeliveryData = [
+    new DeliveryDriver("Frodo", "Baggins", "bike", "55 44 33 22", "Mount Doom", "15:00"),
+    new DeliveryDriver("Bilbo", "Baggins", "car", "44 33 22 11", "Rivedell", "12:00")
+]
+
+testDeliveryData.forEach(x => {
+    appData.addDelivery(x)
 })
+
+console.log(testDeliveryData)
+
+const elems = createDeliveryDriverTableRow(testDeliveryData)
+populateDeliveryDriverBoard(elems, appData.setSelectedDelivery)
+

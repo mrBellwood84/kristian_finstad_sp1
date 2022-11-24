@@ -22,13 +22,14 @@
     <nav class="navbar navbar-expand-sm">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
 
               <ul class="navbar-nav">
                 <li class="nav-item nav-menu-item" >
-                  <a class="nav-link" aria-current="page" href="../Web%20Application/index.html">Dashboard</a>
+                  <a class="nav-link active" aria-current="page" href="../Web%20Application/index.html">Dashboard</a>
                 </li>
 
                 <li class="nav-item nav-menu-item dropdown">
@@ -55,7 +56,7 @@
               </ul>
 
             </div>
-          </div>
+        </div>
     </nav>
 
     <main>
@@ -101,51 +102,61 @@
 
 
         <div class="container-lg">
-            <div class="section-header-container">
-                <div class="h4">Schedule Delivery</div>
-            </div>
 
-            <table class="table table-bordered rounded rounded-3 overflow-hidden align-middle" id="dashboard-delivery-form">
-                <thead>
-                    <tr>
-                        <th>Vehicle:</th>
-                        <th>Name:</th>
-                        <th>Surname:</th>
-                        <th>Telephone:</th>
-                        <th>Address:</th>
-                        <th>Return time:</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <select class="form-select" id="delivery-input-vehicle">
-                                <option value="car">Car</option>
-                                <option value="bike">Bike</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" id="delivery-input-name" />
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" id="delivery-input-surname" />
-                        </td>
-                        <td>
-                            <input type="tel" class="form-control" id="delivery-input-telephone" />
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" id="delivery-input-address" />
-                        </td>
-                        <td>
-                            <input type="time" class="form-control" id="delivery-input-return-time" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <form id="delivery-form">
+                <div class="section-header-container">
+                    <div class="h4">Schedule Delivery</div>
+                </div>
 
-            <div class="section-button-container one-button">
-                <button class="btn btn-custom btn-positive" id="delivery-add">Add</button>
-            </div>
+                <table class="table table-bordered rounded rounded-3 overflow-hidden align-top" id="dashboard-delivery-form">
+                    <thead>
+                        <tr>
+                            <th>Vehicle:</th>
+                            <th>Name:</th>
+                            <th>Surname:</th>
+                            <th>Telephone:</th>
+                            <th>Address:</th>
+                            <th>Return time:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select class="form-select" id="delivery-input-vehicle" value="">
+                                    <option value=""></option>
+                                    <option value="car">Car</option>
+                                    <option value="bike">Bike</option>
+                                </select>
+                                <div class="form-control-error" id="delivery-input-vehicle-error"></div>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="delivery-input-name" />
+                                <div class="form-control-error" id="delivery-input-name-error"></div>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="delivery-input-surname" />
+                                <div class="form-control-error" id="delivery-input-surname-error"></div>
+                            </td>
+                            <td>
+                                <input type="tel" class="form-control" id="delivery-input-telephone" />
+                                <div class="form-control-error" id="delivery-input-telephone-error"></div>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="delivery-input-address" />
+                                <div class="form-control-error" id="delivery-input-address-error"></div>
+                            </td>
+                            <td>
+                                <input type="time" class="form-control" id="delivery-input-return-time" />
+                                <div class="form-control-error" id="delivery-input-return-time-error"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-button-container one-button">
+                    <button class="btn btn-custom btn-positive" id="delivery-add" type="submit">Add</button>
+                </div>
+            </form>
 
             <div class="section-header-container">
                 <div class="h4">Delivery Board</div>
@@ -163,16 +174,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <img src="./resources/bicycle.svg" height="25">
-                        </td>
-                        <td>John</td>
-                        <td>Smith</td>
-                        <td>411 55 666</td>
-                        <td>Downtownstreet 66</td>
-                        <td>16:30</td>
-                    </tr>
                 </tbody>
             </table>
 
