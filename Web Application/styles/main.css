@@ -161,9 +161,9 @@ footer {
     z-index: 9;
 }
 
-.form-control.field-error {
+.form-control.field-error,
+.form-select.field-error {
     border: 5px solid #dc3546aa;
-    
 }
 
 .form-control-error {
