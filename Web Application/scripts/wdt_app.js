@@ -3,7 +3,7 @@
  * 
  *  Created after specification as provided in the semester project assignment document.
  * 
- *  Since application is to follow the OOP paradigm, the program is run from a main application class.
+ *  Since application is to follow the OOP paradigm, the application is run from a main application class.
  *  It is required to create an instance of the class and call the run function.
  * 
  * 
@@ -11,7 +11,8 @@
  *              This decition was made after consulting with a teacher indicated this was expected.
  *              I would have preferd to have written these as methods inside the application class or a nested class within
  *              the application class to encapsulate data and methods as such only run method is globally accessable.
- *              To remedy this, I have created all functions in light of easy transition to class methods.
+ *              To remedy this, I have created all functions in light of easy refactoring to class methods by removing "appObj" as 
+ *              input parameters and and change reference to "this" inside the functions.
  */
 
 
@@ -80,23 +81,20 @@ class Employee {
  */
 class StaffMember extends Employee {
 
-    // fields not required for constuctor
+    // fields not required in constuctor
     outTime             = undefined;
     duration            = undefined;
     expectedReturnTime  = undefined;
 
     /**
-     * @param {string} name Staff member name
-     * @param {string} surname Staff member surname
-     * @param {string} email Staff member email
-     * @param {string} picture Url for staff member thumbnail picture
-     */
-    constructor(name, surname, email, picture) {
+     * @param {Object} inputObj must contain fields for name, surname, email and picture 
+     * */
+    constructor(inputObj) {
 
-        super(name, surname)
+        super(inputObj.name, inputObj.surname)
 
-        this.email      = email;
-        this.picture    = picture;
+        this.email      = inputObj.email;
+        this.picture    = inputObj.picture;
         this.status     = "In";
     }
 
@@ -115,20 +113,15 @@ class StaffMember extends Employee {
  * */
 class DeliveryDriver extends Employee {
     /**
-     * @param {string} name Delivery driver name
-     * @param {string} surname Delivery driver surname
-     * @param {string} vehichle Vehicle string for svg in resource
-     * @param {string} telephone Delivery driver phone number
-     * @param {string} address Delivery address
-     * @param {string} return_time Expected return time as string
+     * @param {Object} inputObj Requre field for name, surname, vehicle, telephone, address and return time
      * @param {Application} appObj main class needed for delivery late functionality
      */
-    constructor(name, surname, vehichle, telephone, address, return_time, appObj) {
-        super(name, surname);
-        this.vehichle = vehichle;
-        this.telephone = telephone;
-        this.address = address;
-        this.returnTime = return_time;
+    constructor(inputObj, appObj) {
+        super(inputObj.name, inputObj.surname);
+        this.vehichle = inputObj.vehichle;
+        this.telephone = inputObj.telephone;
+        this.address = inputObj.address;
+        this.returnTime = inputObj.return_time;
         
         this.deliveryIsLate(appObj)
     }
@@ -412,12 +405,12 @@ function staffUserGet(appObj) {
 
         // create users
         const staffMembers = usersRaw.map(x => {
-            return new StaffMember(
-                x.name.first,
-                x.name.last,
-                x.email,
-                x.picture.thumbnail,
-            );
+            return new StaffMember({
+                name: x.name.first,
+                surname: x.name.last,
+                email: x.email,
+                picture: x.picture.thumbnail,
+            });
         });
 
         appObj.staffMembers = staffMembers;
@@ -572,14 +565,14 @@ function addDelivery(appObj) {
         if (!formValid) return false;               // return if data not valid
 
         // create data object
-        const delivery = new DeliveryDriver(
-            fields.name.value,
-            fields.surname.value,
-            fields.vehichle.value,
-            fields.telephone.value,
-            fields.address.value,
-            fields.return_time.value,
-            appObj,
+        const delivery = new DeliveryDriver({
+                name: fields.name.value,
+                surname: fields.surname.value,
+                vehicle: fields.vehichle.value,
+                telephone: fields.telephone.value,
+                address: fields.address.value,
+                return_time: fields.return_time.value,
+            }, appObj,
         )
         
         // add object to delivery data array
