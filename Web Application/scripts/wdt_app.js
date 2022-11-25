@@ -525,11 +525,11 @@ function staffMemberIsLate(staffObj){
         "</div>";
 
     // get sleep time for timeout
-    const sleep = staffObj.expectedReturnTime.getTime() - obj.outTime.getTime();
+    const sleep = staffObj.expectedReturnTime.getTime() - staffObj.outTime.getTime();
 
     // set timeout
     setTimeout(() => {
-        if (obj.status === "In") return // return void if status equals In
+        if (staffObj.status === "In") return // return void if status equals In
         toastContainer.append(toast)    // else append toast to container
     }, sleep)
 }
