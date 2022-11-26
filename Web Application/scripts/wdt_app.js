@@ -53,6 +53,32 @@ const jqSelectors = {
     INPUT_RETURN_TIME: "#delivery-input-return-time",
 }
 
+/** collection of svgs represented as strings */
+const svgCollection = {
+    /** car icons */
+    car: {
+        /** car icon with dark color theme */
+        dark:   '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#212529" class="bi bi-car-front-fill" viewBox="0 0 16 16">' +
+                    '<path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679c.033.161.049.325.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.807.807 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6ZM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17 1.247 0 3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"/>' +
+                '</svg>',
+
+        /** car icon with light color theme */
+        light:  '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#fff" class="bi bi-car-front-fill" viewBox="0 0 16 16">' +
+                    '<path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679c.033.161.049.325.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.807.807 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6ZM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17 1.247 0 3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"/>' +
+                '</svg>',
+        },
+    bike: {
+        /**  */
+        dark:   '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#212529" class="bi bi-bicycle" viewBox="0 0 16 16">' +
+                    '<path d="M4 4.5a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1v.5h4.14l.386-1.158A.5.5 0 0 1 11 4h1a.5.5 0 0 1 0 1h-.64l-.311.935.807 1.29a3 3 0 1 1-.848.53l-.508-.812-2.076 3.322A.5.5 0 0 1 8 10.5H5.959a3 3 0 1 1-1.815-3.274L5 5.856V5h-.5a.5.5 0 0 1-.5-.5zm1.5 2.443-.508.814c.5.444.85 1.054.967 1.743h1.139L5.5 6.943zM8 9.057 9.598 6.5H6.402L8 9.057zM4.937 9.5a1.997 1.997 0 0 0-.487-.877l-.548.877h1.035zM3.603 8.092A2 2 0 1 0 4.937 10.5H3a.5.5 0 0 1-.424-.765l1.027-1.643zm7.947.53a2 2 0 1 0 .848-.53l1.026 1.643a.5.5 0 1 1-.848.53L11.55 8.623z"/>' +
+                '</svg>',
+
+        light: '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#fff" class="bi bi-bicycle" viewBox="0 0 16 16">' +
+                    '<path d="M4 4.5a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1v.5h4.14l.386-1.158A.5.5 0 0 1 11 4h1a.5.5 0 0 1 0 1h-.64l-.311.935.807 1.29a3 3 0 1 1-.848.53l-.508-.812-2.076 3.322A.5.5 0 0 1 8 10.5H5.959a3 3 0 1 1-1.815-3.274L5 5.856V5h-.5a.5.5 0 0 1-.5-.5zm1.5 2.443-.508.814c.5.444.85 1.054.967 1.743h1.139L5.5 6.943zM8 9.057 9.598 6.5H6.402L8 9.057zM4.937 9.5a1.997 1.997 0 0 0-.487-.877l-.548.877h1.035zM3.603 8.092A2 2 0 1 0 4.937 10.5H3a.5.5 0 0 1-.424-.765l1.027-1.643zm7.947.53a2 2 0 1 0 .848-.53l1.026 1.643a.5.5 0 1 1-.848.53L11.55 8.623z"/>' +
+                '</svg>',
+    }
+}
+
 
 /*  == GRADING CRITERIA CLASSES ==  */
 
@@ -118,7 +144,7 @@ class DeliveryDriver extends Employee {
      */
     constructor(inputObj, appObj) {
         super(inputObj.name, inputObj.surname);
-        this.vehichle = inputObj.vehichle;
+        this.vehichle = inputObj.vehicle;
         this.telephone = inputObj.telephone;
         this.address = inputObj.address;
         this.returnTime = inputObj.return_time;
@@ -233,8 +259,7 @@ class Application {
 }
 
 
-//  == FUNCTIONS FOR HANDLING TABLE AND ROWS ==
-//  - separated from other functions for reusability
+//  == SEPARATED FUNCTIONS FOR REUASBILITY ==
 
 /**
  * Produce table rows as strings for jQuery appending to table.
@@ -244,11 +269,10 @@ class Application {
  * @returns string array representing table rows
  */
 function createStaffTableRow(appObj) {
-    let id = 1
     const result = appObj.staffMembers.map(s => {    
         const elem = 
-            `<tr class="dashboard-staff-table-row" id="staffmember-${id++}">`+
-                `<td><img src=${s.picture} alt="thumbnail"></td>`+
+            `<tr class="dashboard-staff-table-row" id="staffmember-${generateUniqeId()}">`+
+                `<td><img src=${s.picture} class="rounded-3" alt="thumbnail"></td>`+
                 `<td> ${s.name} </td>` +
                 `<td> ${s.surname} </td>` +
                 `<td> ${s.email} </td>` +
@@ -322,20 +346,19 @@ function populateStaffTable(rows, appObj) {
  * @returns string array representing table rows
  */
 function createDeliveryDriverTableRow(appObj) {
-    let id = 1;
     const result = appObj.deliveries.map(d => {
-        const svg = d.vehichle === "car" ? "./resources/car-front-fill.svg"  : "./resources/bicycle.svg"
+        const svg = d.vehichle === "car" ? svgCollection.car.dark : svgCollection.bike.dark;
         const elem = 
-            `<tr class="dashboard-delivery-table-row" id="delivery-driver-${id++}">` +
-                `<td><img src="${svg}" height="25"></td>` +
+            `<tr class="dashboard-delivery-table-row" id="delivery-driver-${generateUniqeId()}">` +
+                `<td>${svg}</td>` +
                 `<td>${d.name}</td>` +
                 `<td>${d.surname}</td>` +
                 `<td>${d.telephone}</td>` +
                 `<td>${d.address}</td>` +
                 `<td>${d.returnTime}</td>` +
-            "</tr>"
+            "</tr>";
         return elem;
-    })
+    });
     return result;
 }
 
@@ -381,6 +404,50 @@ function populateDeliveryDriverBoard(rows, appObj) {
             }
         })
     })
+}
+
+/** generates an uniqe identitfier to be used for element id's */
+function generateUniqeId() {
+    return Math.ceil((10**10) + Math.random() * 0x100000 ).toString(16).substring(1);
+}
+
+/** 
+ *  Create and add toast to document
+ * 
+ * @param {string} imageElem image element represented as string
+ * @param {string} headerText header text
+ * @param {string} bodyElems body elements represented as string
+ */
+function createToast(imageElem, headerText, bodyElems) {
+    const toastContainer = $(jqSelectors.TOAST_CONTAINER);  // get toast container
+    const toastId = `toast-${generateUniqeId()}`;
+
+    const toast =         
+        `<div class='toast show' id='${toastId}'>` +
+            "<div class='toast-header d-flex'>" +
+                imageElem +
+                `<strong class='p-2 me-auto'>${headerText}</strong>` +
+                `<small id='${toastId}-time'>Now</small>` +
+                "<button type='button' class='btn-close ml-auto' data-bs-dismiss='toast'></button>" +
+            "</div>" +
+            "<div class='toast-body'> " +
+                bodyElems +
+            "</div>" +
+        "</div>";
+
+    toastContainer.append(toast)
+
+    const toastTimer = $(`#${toastId}-time`);
+    let now = 0;
+
+    setInterval(() => {
+        now++;
+        const hour = Math.floor(now / 60)
+        const min = now % 60
+        const str = `${hour > 0 ? hour + " hours and " : ""}${min} minutes ago`;
+        toastTimer.text(str)
+
+    }, 60000)
 }
 
 
@@ -434,7 +501,6 @@ function staffUserGet(appObj) {
 function staffOut(appObj) {
 
     const selected = appObj.staffMemberSelected;
-    const allStaff = appObj.staffMembers;
 
     if (!selected) return;                  // return if no staff member selected
     if (selected.status === "Out") return   // return if staff member already out
@@ -507,30 +573,23 @@ function staffIn(appObj) {
  * 
  * @param {StaffMember} staffObj 
  */
-function staffMemberIsLate(staffObj){
+function staffMemberIsLate(staffObj) {
 
-    const toastContainer = $(jqSelectors.TOAST_CONTAINER);  // get toast container
-    const toastId = `toast-${staffObj.name}-${Date.now()}`; // create toast elem id
+    const image = `<img src="${staffObj.picture}" alt="staff picture" class="rounded">`
 
-    // create toast
-    const toast = 
-        `<div class='toast show' id="${toastId}">` +
-            "<div class='toast-header'>" +
-                "<strong class='me-auto'>Staff Member Late</strong>" +
-                "<button type='button' class='btn-close' data-bs-dismiss='toast'></button>" +
-            "</div>" +
-            "<div class='toast-body'>" +
-                `<p> ${staffObj.name} ${staffObj.surname} seems to be running late</p>` +
-            "</div>" +
-        "</div>";
+    const head = `${staffObj.name} ${staffObj.surname} is late`;
+
+    const body = 
+        `<p>${staffObj.name} ${staffObj.surname} have been out for ${staffObj.duration}</p>` +
+        `<div>Go to <a href="#">Dashboard</a></div>`
 
     // get sleep time for timeout
     const sleep = staffObj.expectedReturnTime.getTime() - staffObj.outTime.getTime();
 
     // set timeout
     setTimeout(() => {
-        if (staffObj.status === "In") return // return void if status equals In
-        toastContainer.append(toast)    // else append toast to container
+        if (staffObj.status === "In") return;       // return void if status equals "In"
+        createToast(image, head, body);  // create toast
     }, sleep)
 }
 
@@ -561,6 +620,7 @@ function addDelivery(appObj) {
             fields[x].removeError()
         })
 
+        // validate form
         const formValid = validateDelivery(fields)  // validate form fields 
         if (!formValid) return false;               // return if data not valid
 
@@ -574,6 +634,9 @@ function addDelivery(appObj) {
                 return_time: fields.return_time.value,
             }, appObj,
         )
+
+        console.log("In func", fields.vehichle.value)
+        console.log("In func", delivery)
         
         // add object to delivery data array
         appObj.addDelivery(delivery)
@@ -652,20 +715,17 @@ function validateDelivery(fields) {
  */
 function deliveryIsLate(delivery, appObj) {
 
-    const toastContainer = $(jqSelectors.TOAST_CONTAINER);  // create toast container
-    const toastId = `toast-${delivery.name}-${Date.now()}`; // generate toast elem id
+    const image = delivery.vehichle === "car" ? svgCollection.car.light : svgCollection.car.dark;
 
-    // create toast
-    const toast = 
-        `<div class='toast show' id="${toastId}">` +
-            "<div class='toast-header'>" +
-                "<strong class='me-auto'>Delivery Driver Late</strong>" +
-                "<button type='button' class='btn-close' data-bs-dismiss='toast'></button>" +
-            "</div>" +
-            "<div class='toast-body'>" +
-                `<p> ${delivery.name} ${delivery.surname} seems to be running late</p>` +
-            "</div>" +
-        "</div>";
+    const header = `Delivery driver not returned`;
+
+    const body = 
+        `<div>Driver: ${delivery.name} ${delivery.surname}</div>` +
+        `<div>Driver telephone: ${delivery.telephone}</div>` + 
+        `<div>Address: ${delivery.address}</div>` + 
+        `<p>Estimated return: ${delivery.returnTime}</p>` +
+        `<div>Go to <a href="#">Dashboard</a></div>`
+
 
     // create sleep time for timeout
     const now = Date.now();
@@ -674,13 +734,13 @@ function deliveryIsLate(delivery, appObj) {
     later.setMinutes(parseInt(delivery.returnTime.split(":")[1]));
     const sleep = later.getTime() - now;
 
-
     setTimeout(() => {
         // check if object still exist in data
         const shouldRun = appObj.deliveries.find(x => x.telephone === delivery.telephone);
-
         if (!shouldRun) return;         // return void if toast not relevant
-        toastContainer.append(toast)    // else append toast to container
+
+        createToast(image, header, body)
+
     }, sleep)
 }
 
@@ -739,5 +799,3 @@ function digitalClock() {
 
 const app = new Application();  // create application instance
 app.run()                       // run application
-
-

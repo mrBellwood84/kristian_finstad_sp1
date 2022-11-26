@@ -68,7 +68,7 @@ main {
 .table tbody {
     font-family: "Calibri";
     background-color: #83D1E1;
-    columns: #212559;
+    columns: #212529;
     cursor: pointer;
 }
 
@@ -115,8 +115,8 @@ main {
 }
 
 .btn-custom:active {
-    color: #212559;
-    border-color: #212559;
+    color: #212529;
+    border-color: #212529;
     opacity: 0.8;
 }
 
@@ -168,5 +168,16 @@ footer {
 
 .form-control-error {
     color: #dc3545;
+    font-weight: 600;
 }
 
+.toast-header {
+    background-color: #0E8EA8;
+    color: #fff;
+}
+
+.toast-body {
+    font-weight: 600;
+    background-color: #fff;
+    opacity: 0.7;
+}
