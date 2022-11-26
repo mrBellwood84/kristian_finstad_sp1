@@ -580,7 +580,7 @@ function staffMemberIsLate(staffObj) {
     const head = `${staffObj.name} ${staffObj.surname} is late`;
 
     const body = 
-        `<p>${staffObj.name} ${staffObj.surname} have been out for ${staffObj.duration}</p>` +
+        `<p>${staffObj.name} ${staffObj.surname} has been out for ${staffObj.duration}</p>` +
         `<div>Go to <a href="#">Dashboard</a></div>`
 
     // get sleep time for timeout
@@ -635,9 +635,6 @@ function addDelivery(appObj) {
             }, appObj,
         )
 
-        console.log("In func", fields.vehichle.value)
-        console.log("In func", delivery)
-        
         // add object to delivery data array
         appObj.addDelivery(delivery)
 
@@ -717,7 +714,7 @@ function deliveryIsLate(delivery, appObj) {
 
     const image = delivery.vehichle === "car" ? svgCollection.car.light : svgCollection.car.dark;
 
-    const header = `Delivery driver not returned`;
+    const header = `Delivery Driver Not Returned`;
 
     const body = 
         `<div>Driver: ${delivery.name} ${delivery.surname}</div>` +
