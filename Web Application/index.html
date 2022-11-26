@@ -57,6 +57,7 @@
 
             </div>
         </div>
+
     </nav>
 
     <main>
@@ -67,7 +68,7 @@
                     <img src="./resources/logo.png" height="100">
                 </div>
                 <div class="col" id="dashboard-header-text-container">
-                    <div class="h2""">Reception Management Dashboard</div>
+                    <div class="h2">Reception Management Dashboard</div>
                 </div>
             </div>
         </div>
@@ -185,12 +186,55 @@
     </main>
 
     <footer>
-        <div class="container-xl mt-5">
+        <div class="container-xl">
             <div id="clock-container">Await clock</div>
         </div>
     </footer>
 
     <div id="toast-container"></div>
 
+    <div id="staff-member-set-time-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content border-0">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <p><span id="staff-memeber-set-time-modal-name"></span> going out!</p>
+                    </h4>
+                </div>
+
+                <div class="modal-body">
+                    <p>Set estimated duration in minutes.</p>
+                    <input name="staff-member-out-field" id="staff-memeber-out-field" class="form-control" type="number" min="0" placeholder="Minutes" autofocus/>
+                    <div class="form-control-error" id="staff-memeber-out-field-error"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="staff-member-set-time-modal-ok-btn" class="btn btn-sm btn-custom btn-positive">Set Out</button>
+                    <button type="button" id="staff-member-set-time-modal-cancel-btn" class="btn btn-sm btn-custom btn-negative">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="delivery-clear-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content border-0">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Clear Delivery</h4>
+                </div>
+
+                <div class="modal-body">
+                    <p>Are you sure you want do clear the delivery for <span id="delivery-clear-modal-name"></span>?</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="delivery-clear-modal-yes-btn" class="btn btn-sm btn-custom btn-positive">Yes</button>
+                    <button type="button" id="delivery-clear-modal-no-btn" class="btn btn-sm btn-custom btn-negative">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

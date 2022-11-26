@@ -37,6 +37,7 @@ nav {
 
 main {
     grid-row: 2;
+    margin-bottom: 100px;
 }
 
 #dashboard-header-text-container {
@@ -141,14 +142,24 @@ main {
 }
 
 footer {
-    grid-row: 3;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #fff;
+    opacity: 0.9;
+}
+
+footer div {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    height: 100%;
 }
 
 #clock-container {
-    text-align: right;
-    padding: 1rem;
     font-family:  "Consolas";
-    font-size: "1em";
+    font-size: "large";
     font-weight: 600;
 }
 
@@ -172,12 +183,25 @@ footer {
 }
 
 .toast-header {
+    font-family: "Consolas";
     background-color: #0E8EA8;
     color: #fff;
+}
+
+.toast-header small {
+    max-width: fit-content;
+    text-align: right;
 }
 
 .toast-body {
     font-weight: 600;
     background-color: #fff;
     opacity: 0.7;
+}
+
+
+.modal-header {
+    font-family: "Consolas";
+    background-color: #0E8EA8;
+    color: #fff;
 }

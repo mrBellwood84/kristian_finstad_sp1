@@ -51,6 +51,17 @@ const jqSelectors = {
     INPUT_TELEPHONE: "#delivery-input-telephone",
     INPUT_ADDRESS: "#delivery-input-address",
     INPUT_RETURN_TIME: "#delivery-input-return-time",
+
+    MODAL_SET_TIME: "#staff-member-set-time-modal",
+    MODAL_SET_TIME_NAME_ELEM: "#staff-memeber-set-time-modal-name",
+    MODAL_SET_TIME_OK_BTN: "#staff-member-set-time-modal-ok-btn",
+    MODAL_SET_TIME_CANCEL_BTN: "#staff-member-set-time-modal-cancel-btn",
+    MODAL_SET_TIME_OUT_FIELD: "#staff-memeber-out-field",
+
+    MODAL_CLEAR_DELIVERY: "#delivery-clear-modal",
+    MODAL_CLEAR_DELIVERY_YES: "#delivery-clear-modal-yes-btn",
+    MODAL_CLEAR_DELIVERY_NO: "#delivery-clear-modal-no-btn",
+    MODAL_CLEAR_DELIVERY_NAME: "#delivery-clear-modal-name",
 }
 
 /** collection of svgs represented as strings */
@@ -202,7 +213,10 @@ class InputField {
     }
 
     /** Reset field for new input */
-    reset() { this.field.val("") }
+    reset() {
+        this.removeError();
+        this.field.val("");
+    }
 }
 
 /**
@@ -225,10 +239,20 @@ class Application {
         staffUserGet(this);  // load staff users from api
         digitalClock();      // starts digital clock
 
-        $(jqSelectors.STAFF_OUT_BTN).click(() => staffOut(this));
+        $(jqSelectors.STAFF_OUT_BTN).click(() => handleSetStaffMemeberInModalOpen(this));
         $(jqSelectors.STAFF_IN_BTN).click(() => staffIn(this));
         $(jqSelectors.DELIVERY_FORM).submit(() => addDelivery(this));
-        $((jqSelectors.DELIVERY_CLEAR_BUTTON)).click(() => clearDelivery(this));
+        $((jqSelectors.DELIVERY_CLEAR_BUTTON)).click(() => handleOpenClearDeliveryModal(this));
+
+        $(jqSelectors.MODAL_SET_TIME_CANCEL_BTN).click(handleSetStaffMemeberInModalClose);
+        $(jqSelectors.MODAL_SET_TIME_OK_BTN).click(() => staffOut(this));
+        $(jqSelectors.MODAL_SET_TIME_OUT_FIELD).keypress((event) => {
+            const keycode = event.keyCode;
+            if (keycode == "13") staffOut(this);
+        });
+
+        $(jqSelectors.MODAL_CLEAR_DELIVERY_YES).click(() => clearDelivery(this))
+        $(jqSelectors.MODAL_CLEAR_DELIVERY_NO).click(handleCloseClearDeliveryModal);
 
     }
 
@@ -444,12 +468,46 @@ function createToast(imageElem, headerText, bodyElems) {
         now++;
         const hour = Math.floor(now / 60)
         const min = now % 60
-        const str = `${hour > 0 ? hour + " hours and " : ""}${min} minutes ago`;
-        toastTimer.text(str)
+        const hour_str = hour > 0 ? `${hour} ${hour > 1 ? "hours" : "hour"}` : "";
+        const minute_str = min > 0 ? `${min} ${min > 1 ? "minutes" : "minute"}` : "";
+        toastTimer.text(`${hour_str} ${minute_str} ago`);
 
     }, 60000)
 }
 
+/**
+ * Handle click for Staff member out button.
+ * Opens dialog if staff memeber selected
+ * 
+ * @param {Application} appObj 
+ */
+function handleSetStaffMemeberInModalOpen(appObj) {
+    if (!appObj.staffMemberSelected) return;
+    if (appObj.staffMemberSelected.status === "Out") return;
+    const _ = new InputField(jqSelectors.MODAL_SET_TIME_OUT_FIELD).reset();
+    $(jqSelectors.MODAL_SET_TIME_NAME_ELEM).text(`${appObj.staffMemberSelected.name} ${appObj.staffMemberSelected.surname}`);
+    $(jqSelectors.MODAL_SET_TIME).modal("show");
+}
+
+/** Handle close modal button click */
+function handleSetStaffMemeberInModalClose() {
+    $(jqSelectors.MODAL_SET_TIME).modal("hide");
+}
+
+/**
+ * Handle open clear delivery modal on button click
+ * 
+ * @param {Application} appObj 
+ */
+function handleOpenClearDeliveryModal(appObj) {
+    if (!appObj.deliverySelected) return;
+    $(jqSelectors.MODAL_CLEAR_DELIVERY_NAME).text(`${appObj.deliverySelected.name} ${appObj.deliverySelected.surname}`);
+    $(jqSelectors.MODAL_CLEAR_DELIVERY).modal("show");
+}
+
+function handleCloseClearDeliveryModal() {
+    $(jqSelectors.MODAL_CLEAR_DELIVERY).modal("hide");
+}
 
 /**  == FUNCTIONS REQUIRED BY GRADING CRITERIA == */
 
@@ -500,37 +558,35 @@ function staffUserGet(appObj) {
  */
 function staffOut(appObj) {
 
-    const selected = appObj.staffMemberSelected;
+    const inputField = new InputField(jqSelectors.MODAL_SET_TIME_OUT_FIELD);
+    inputField.reset();
 
-    if (!selected) return;                  // return if no staff member selected
-    if (selected.status === "Out") return   // return if staff member already out
+    // validate input field
+    const stringNotEmpty = value => !value ? "Missing value" : "";
+    const largerThanZero = value => value > 0 ? "" : "Not valid a valid number"
+    let valid = inputField.validate(stringNotEmpty);
+    if (!valid) return
+    valid = inputField.validate(largerThanZero);
+    if(!valid) return;
 
-    // promt user for time in minutes
-    let time = undefined;
-    while (true) {
-        let userInput = prompt("Set staff out time in minutes");
-        if (userInput === null) break;
-        time = parseInt(userInput);
-        if (!isNaN(time)) break;
-    }
+    const time = parseInt(inputField.value);
 
-    if (time <= 0 || isNaN(time) || !time) return;
+    const now = new Date()
+    const later = new Date()
+    later.setMinutes(later.getMinutes() + time);
 
-    // get time for now and expected returr
-    const now = new Date();
-    const back = new Date();
-    back.setMinutes(now.getMinutes() + time);
-
-    // get hours and minutes for out duration
     const hours = Math.floor(time / 60);
-    const minutes = time - (hours * 60);
-    const hourString = hours > 0 ? `${hours} hour, ` : "";
-    const duration = `${hourString}${minutes} minutes`;
+    const minutes = time % 60;
+    const hour_str = hours > 0 ? `${hours} ${hours > 1 ? "hours" : "hour"}` : "";
+    const minute_str = minutes > 0 ? `${minutes} ${minutes > 1 ? "minutes" : "minute"}` : "";
+    const duration = `${hour_str}${hours > 0 && minutes > 0 ? ", " : ""}${minute_str}`;
+
+    const selected = appObj.staffMemberSelected;
 
     // update object
     selected.status = "Out";
     selected.outTime = now;
-    selected.expectedReturnTime = back;
+    selected.expectedReturnTime = later;
     selected.duration = duration;
     
     // activate staff member is late
@@ -542,6 +598,8 @@ function staffOut(appObj) {
 
     // remove selected staff member from app object
     appObj.staffMemberSelected = undefined;
+
+    handleSetStaffMemeberInModalClose()
 }
 
 /** Handle staff in click event
@@ -673,7 +731,6 @@ function validateDelivery(fields) {
     // is number, spaces allowed
     const isNumber = value => /^(\d+\s)*(\d+)$/.test(value) ? "" : "Not a number";
     // check time has valid format
-    // REMARK: Redundant since input type return this format
     const validTimeFormat = value => /\d\d\:\d\d/.test(value) ? "" : "Not valid time format";
     // check if provided datetime value is later than current datetime
     const isLater = value => {
@@ -752,16 +809,14 @@ function clearDelivery(appObj) {
     const selected = appObj.deliverySelected; 
     if (!selected) return;                      // return if not selected
     
-    // get user confimation to remove delivery
-    const shouldRemove = confirm("Do you want to remove this delivery?");
-    if (!shouldRemove) return;
-
     // remove selected delivyer object
     appObj.removeDeliveries(selected);
 
     // repopulate delivery board
     const elems = createDeliveryDriverTableRow(appObj);
     populateDeliveryDriverBoard(elems, appObj);
+
+    handleCloseClearDeliveryModal();
 }
 
 /** function for digial clock  */
