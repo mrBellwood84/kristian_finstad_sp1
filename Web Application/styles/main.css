@@ -58,6 +58,7 @@ main {
 .table {
     border: 1px solid #212529;
     text-align: center;
+    user-select: none;
 }
 
 .table thead {

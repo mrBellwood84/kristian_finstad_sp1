@@ -239,12 +239,12 @@ class Application {
         staffUserGet(this);  // load staff users from api
         digitalClock();      // starts digital clock
 
-        $(jqSelectors.STAFF_OUT_BTN).click(() => handleSetStaffMemeberInModalOpen(this));
+        $(jqSelectors.STAFF_OUT_BTN).click(() => handleSetStaffMemeberOutModalOpen(this));
         $(jqSelectors.STAFF_IN_BTN).click(() => staffIn(this));
         $(jqSelectors.DELIVERY_FORM).submit(() => addDelivery(this));
         $((jqSelectors.DELIVERY_CLEAR_BUTTON)).click(() => handleOpenClearDeliveryModal(this));
 
-        $(jqSelectors.MODAL_SET_TIME_CANCEL_BTN).click(handleSetStaffMemeberInModalClose);
+        $(jqSelectors.MODAL_SET_TIME_CANCEL_BTN).click(handleSetStaffMemeberOutModalClose);
         $(jqSelectors.MODAL_SET_TIME_OK_BTN).click(() => staffOut(this));
         $(jqSelectors.MODAL_SET_TIME_OUT_FIELD).keypress((event) => {
             const keycode = event.keyCode;
@@ -252,7 +252,7 @@ class Application {
         });
 
         $(jqSelectors.MODAL_CLEAR_DELIVERY_YES).click(() => clearDelivery(this))
-        $(jqSelectors.MODAL_CLEAR_DELIVERY_NO).click(handleCloseClearDeliveryModal);
+        $(jqSelectors.MODAL_CLEAR_DELIVERY_NO).click(() => handleCloseClearDeliveryModal(this));
 
     }
 
@@ -335,30 +335,44 @@ function populateStaffTable(rows, appObj) {
         const selector = r[i].id
         const elem = $(`#${selector}`);
 
-        elem.removeClass("row-selected").click(() => {
+        elem.removeClass("row-selected")
+        
+            .click(() => {
 
-            const email = r[i].children[3].innerText
-            const self = appObj.staffMembers.find(x => x.email === email)
-            const selected = appObj.staffMemberSelected;
+                // decleared in scope due to unexpected experiences
+                const selected = appObj.staffMemberSelected;
+                const email = r[i].children[3].innerText
+                const self = appObj.staffMembers.find(x => x.email === email)
 
-            if (selected) {
-                if (selected.email === email) {
-                    appObj.staffMemberSelected = undefined;
-                    elem.removeClass("row-selected")
-                } else {
-                    r.map(x => {
-                        const e = `#${r[x].id}`;
-                        $(e).removeClass("row-selected")
-                    })
+                if (selected) {
+                    if (selected.email === email) {
+                        appObj.staffMemberSelected = undefined;
+                        elem.removeClass("row-selected")
+                    } else {
+                        r.map(x => {
+                            const e = `#${r[x].id}`;
+                            $(e).removeClass("row-selected")
+                        })
+                        elem.addClass("row-selected")
+                        appObj.staffMemberSelected = self;
+                    }
+                }
+                else {
                     elem.addClass("row-selected")
                     appObj.staffMemberSelected = self;
                 }
-            }
-            else {
-                elem.addClass("row-selected")
+            })
+            
+            .dblclick(() => {
+
+                // declared in scope due to unexpected occurences
+                const email = r[i].children[3].innerText
+                const self = appObj.staffMembers.find(x => x.email === email)
+            
+                elem.addClass("row-selected");
                 appObj.staffMemberSelected = self;
-            }
-        })
+                handleSetStaffMemeberOutModalOpen(appObj)
+            })
     })
 }
 
@@ -404,30 +418,48 @@ function populateDeliveryDriverBoard(rows, appObj) {
         const selector = r[i].id;
         const elem = $(`#${selector}`);
 
-        elem.removeClass("row-selected").click(() => {
-            const phone = r[i].children[3].innerText;
-            const self = appObj.deliveries.find(x => x.telephone === phone)
-            const selected = appObj.deliverySelected;
+        const phone = r[i].children[3].innerText;
+        const self = appObj.deliveries.find(x => x.telephone === phone);
+        const selected = appObj.deliverySelected;
 
+        elem.removeClass("row-selected")
 
-            if (selected) {
-                if (selected.telephone === phone) {
-                    appObj.deliverySelected = undefined;
-                    elem.removeClass("row-selected")
+            .click(() => {
+
+                // decleared in scope due to unexpected behaviour
+                const phone = r[i].children[3].innerText;
+                const self = appObj.deliveries.find(x => x.telephone === phone);
+                const selected = appObj.deliverySelected;
+
+                if (selected) {
+                    if (selected.telephone === phone) {
+                        appObj.deliverySelected = undefined;
+                        elem.removeClass("row-selected")
+                    } else {
+                        r.map(x => {
+                            const e = `#${r[x].id}`;
+                            $(e).removeClass("row-selected")
+                        })
+                        elem.addClass("row-selected")
+                        appObj.deliverySelected = self;
+                    }
                 } else {
-                    r.map(x => {
-                        const e = `#${r[x].id}`;
-                        $(e).removeClass("row-selected")
-                    })
                     elem.addClass("row-selected")
                     appObj.deliverySelected = self;
                 }
-            } else {
-                elem.addClass("row-selected")
+            })
+            
+            .dblclick(() => {
+                
+                // decleared in scope due to unexpected behaviour
+                const phone = r[i].children[3].innerText;
+                const self = appObj.deliveries.find(x => x.telephone === phone);
+
+                elem.addClass("row-selected");
                 appObj.deliverySelected = self;
-            }
-        })
-    })
+                handleOpenClearDeliveryModal(appObj);
+        });
+    });
 }
 
 /** generates an uniqe identitfier to be used for element id's */
@@ -481,16 +513,17 @@ function createToast(imageElem, headerText, bodyElems) {
  * 
  * @param {Application} appObj 
  */
-function handleSetStaffMemeberInModalOpen(appObj) {
+function handleSetStaffMemeberOutModalOpen(appObj) {
     if (!appObj.staffMemberSelected) return;
     if (appObj.staffMemberSelected.status === "Out") return;
     const _ = new InputField(jqSelectors.MODAL_SET_TIME_OUT_FIELD).reset();
+    $(jqSelectors.MODAL_SET_TIME_OUT_FIELD).select
     $(jqSelectors.MODAL_SET_TIME_NAME_ELEM).text(`${appObj.staffMemberSelected.name} ${appObj.staffMemberSelected.surname}`);
     $(jqSelectors.MODAL_SET_TIME).modal("show");
 }
 
 /** Handle close modal button click */
-function handleSetStaffMemeberInModalClose() {
+function handleSetStaffMemeberOutModalClose() {
     $(jqSelectors.MODAL_SET_TIME).modal("hide");
 }
 
@@ -505,8 +538,23 @@ function handleOpenClearDeliveryModal(appObj) {
     $(jqSelectors.MODAL_CLEAR_DELIVERY).modal("show");
 }
 
-function handleCloseClearDeliveryModal() {
+/**
+ * Handle closing clear delivery modal.
+ * Also unselect selected object.
+ * 
+ * @param {Application} appObj 
+ */
+function handleCloseClearDeliveryModal(appObj) {
     $(jqSelectors.MODAL_CLEAR_DELIVERY).modal("hide");
+    const table = $(jqSelectors.DELIVERY_BOARD);
+    const rows = table.children();
+
+    rows.map(i => {
+        const id = rows[i].id;
+        const elem = $(`#${id}`);
+        elem.removeClass("row-selected");
+        appObj.deliverySelected = undefined;
+    })
 }
 
 /**  == FUNCTIONS REQUIRED BY GRADING CRITERIA == */
@@ -599,7 +647,7 @@ function staffOut(appObj) {
     // remove selected staff member from app object
     appObj.staffMemberSelected = undefined;
 
-    handleSetStaffMemeberInModalClose()
+    handleSetStaffMemeberOutModalClose()
 }
 
 /** Handle staff in click event
@@ -816,7 +864,7 @@ function clearDelivery(appObj) {
     const elems = createDeliveryDriverTableRow(appObj);
     populateDeliveryDriverBoard(elems, appObj);
 
-    handleCloseClearDeliveryModal();
+    handleCloseClearDeliveryModal(appObj);
 }
 
 /** function for digial clock  */
