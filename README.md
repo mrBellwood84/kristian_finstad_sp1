@@ -11,12 +11,16 @@ This web application provide a dashboard for the receptionist with the following
 
 ## Installation
 
-This application require no specific installation. Download source code and open _**index.html**_ in a web browser.
+This application require no specific installation. All packages and resources are included in local files, 
+but internet connection is required for downloading user data from [randomuser.me](https://randomuser.me/).
+1. Download source code.
+2. Open **index.html**
 
-## Dependencies
 
-All depenencies are included in the source code.
+## Packages
 
-- **Bootstrap 5** - _v 5.2.2, including popper_
-- **Bootstrap Icons** - _"bike" and "car" svg source code copied to wdt_app.js
-- **jQuery** - _v3.6.1_
+All packages are included in the source code.
+
+- [**Bootstrap 5**](https://getbootstrap.com/) - _v 5.2.2_
+- [**Bootstrap Icons**](https://icons.getbootstrap.com/) - "bike" and "car" svg is stored in object inside wdt_app.js
+- [**jQuery**](https://jquery.com/) - _v3.6.1_
