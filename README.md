@@ -22,5 +22,5 @@ but internet connection is required for downloading user data from [randomuser.m
 All packages are included in the source code.
 
 - [**Bootstrap 5**](https://getbootstrap.com/) - _v 5.2.2_
-- [**Bootstrap Icons**](https://icons.getbootstrap.com/) - "bike" and "car" svg is stored in object inside wdt_app.js
+- [**Font Awesome**](https://fontawesome.com/) - Icons for car and motorcycle downloaded as .svg from [SvgRepo]('https://www.svgrepo.com/) and integrated in wdt_app.js.
 - [**jQuery**](https://jquery.com/) - _v3.6.1_
