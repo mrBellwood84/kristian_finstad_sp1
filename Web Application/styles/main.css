@@ -164,15 +164,6 @@ footer div {
     font-weight: 600;
 }
 
-#toast-container {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: max-content;
-    width: max-content;
-    z-index: 9;
-}
-
 .form-control.field-error,
 .form-select.field-error {
     border: 5px solid #dc3546aa;
@@ -181,6 +172,22 @@ footer div {
 .form-control-error {
     color: #dc3545;
     font-weight: 600;
+}
+
+#toast-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: max-content;
+    width: max-content;
+    z-index: 9;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#toast-container > .toast {
+    margin: 3px 6px;
 }
 
 .toast-header {
